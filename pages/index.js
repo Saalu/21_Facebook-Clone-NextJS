@@ -5,7 +5,7 @@ import Login from "../components/Login";
 import { getSession } from "next-auth/client";
 
 export default function Home({ session }) {
-  // if (!session) return <Login />;
+  if (!session) return <Login />;
   return (
     <div>
       <Head>
@@ -23,13 +23,13 @@ export default function Home({ session }) {
   );
 }
 
-// export async function getServerSideProps(context) {
-//   //Get the user
-//   const session = await getSession(context);
+export async function getServerSideProps(context) {
+  //Get the user
+  const session = await getSession(context);
 
-//   return {
-//     props: {
-//       session,
-//     },
-//   };
-// }
+  return {
+    props: {
+      session,
+    },
+  };
+}
