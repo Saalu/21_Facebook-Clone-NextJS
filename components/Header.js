@@ -1,5 +1,8 @@
 import Image from "next/image";
 
+import HeaderIcon from "./HeaderIcon";
+import { signOut, session, useSession } from "next-auth/client";
+
 import {
   BellIcon,
   ChartBarIcon,
@@ -15,8 +18,6 @@ import {
   SearchIcon,
   ShoppingCartIcon,
 } from "@heroicons/react/outline";
-import HeaderIcon from "./HeaderIcon";
-import { signOut, session, useSession } from "next-auth/client";
 
 function Header() {
   const [session] = useSession();
