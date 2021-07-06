@@ -1,12 +1,33 @@
+import Image from "next/image";
 import { CameraIcon, EmojiHappyIcon } from "@heroicons/react/outline";
 import { VideoCameraIcon } from "@heroicons/react/solid";
 import { useSession } from "next-auth/client";
-import Image from "next/image";
+import { useRef, useState } from "react";
+import { db } from "../firebase";
+import firebase from "firebase";
 
 function InputBox() {
   const [session] = useSession();
+  //   const inputRef = useRef(null);
+  const [msg, setMsg] = useState("");
+
   const sendPost = (e) => {
     e.preventDefault();
+
+    // if (!inputRef.current.value) return;
+    if (!msg) return;
+    console.log(msg);
+
+    db.collection("posts").add({
+      message: msg,
+      name: session.user.name,
+      email: session.user.email,
+      image: session.user.image,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+
+    setMsg("");
+    // inputRef.current.value = "";
   };
   return (
     <div
@@ -22,14 +43,18 @@ function InputBox() {
           layout="fixed"
         />
 
-        <form className="flex flex-1">
+        <form className="flex flex-1" onSubmit={sendPost}>
           <input
             className="rounded-full h-12 bg-gray-100 
           flex-grow px-5 focus:outline-none"
+            // ref={useRef}
+            // name='msg'
+            value={msg}
+            onChange={(e) => setMsg(e.target.value)}
             type="text"
             placeholder={`What's on your mind, ${session.user.name}?`}
           />
-          <button hidden type="submit" className="" onClick={sendPost}>
+          <button hidden type="submit" className="">
             Submit
           </button>
         </form>
