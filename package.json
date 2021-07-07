@@ -11,6 +11,7 @@
   "dependencies": {
     "@craco/craco": "^6.1.2",
     "@heroicons/react": "^1.0.1",
+    "firebase": "^8.7.0",
     "next": "11.0.1",
     "next-auth": "^3.27.1",
     "react": "17.0.2",
