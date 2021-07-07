@@ -8,8 +8,10 @@ import firebase from "firebase";
 
 function InputBox() {
   const [session] = useSession();
-  //   const inputRef = useRef(null);
   const [msg, setMsg] = useState("");
+  // const inputRef = useRef(null);
+  const filepickerRef = useRef(null);
+  const [imgToPost, setImgToPost] = useState("");
 
   const sendPost = (e) => {
     e.preventDefault();
@@ -29,6 +31,21 @@ function InputBox() {
     setMsg("");
     // inputRef.current.value = "";
   };
+
+  const addImageToPost = (e) => {
+    const reader = new FileReader();
+    if (e.target.files[0]) {
+      reader.readAsDataURL(e.target.files[0]);
+    }
+    reader.onload = (readerEvent) => {
+      setImgToPost(readerEvent.target.result);
+    };
+  };
+
+  const removeImage = () => {
+    setImgToPost(null);
+  };
+
   return (
     <div
       className="rounded-2xl shadow-md 
@@ -58,18 +75,40 @@ function InputBox() {
             Submit
           </button>
         </form>
+
+        {/* Preview Image for post */}
+
+        {imgToPost && (
+          <div
+            className="flex flex-col hover:brightness-110 transition 
+            duration-150 transform hover:scale-105 cursor-pointer"
+            onClick={removeImage}
+          >
+            <img src={imgToPost} className="h-10 object-contain" alt="" />
+            <p className="text-xs text-red-500 text-center">Remove</p>
+          </div>
+        )}
       </div>
 
       {/* next */}
       <div className="flex justify-evenly p-3 border-t">
         <div className="inputIcon">
           <VideoCameraIcon className="h-7 text-red-500 " />
-          <p className="text-xs sm:tex-sm xl:text-base">Live Video</p>
+          <p className="text-xs sm:text-sm xl:text-base">Live Video</p>
         </div>
 
-        <div className="inputIcon">
+        <div
+          onClick={() => filepickerRef.current.click()}
+          className="inputIcon"
+        >
           <CameraIcon className="h-7 text-green-500 " />
-          <p className="text-xs sm:tex-sm xl:text-base">Photo/Video</p>
+          <p className="text-xs sm:text-sm xl:text-base">Photo/Video</p>
+          <input
+            ref={filepickerRef}
+            type="file"
+            hidden
+            onChange={addImageToPost}
+          />
         </div>
 
         <div className="inputIcon">
