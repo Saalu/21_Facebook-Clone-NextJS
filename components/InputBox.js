@@ -3,7 +3,7 @@ import { CameraIcon, EmojiHappyIcon } from "@heroicons/react/outline";
 import { VideoCameraIcon } from "@heroicons/react/solid";
 import { useSession } from "next-auth/client";
 import { useRef, useState } from "react";
-import { db } from "../firebase";
+import { db, storage } from "../firebase";
 import firebase from "firebase";
 
 function InputBox() {
@@ -20,13 +20,44 @@ function InputBox() {
     if (!msg) return;
     console.log(msg);
 
-    db.collection("posts").add({
-      message: msg,
-      name: session.user.name,
-      email: session.user.email,
-      image: session.user.image,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    });
+    db.collection("posts")
+      .add({
+        message: msg,
+        name: session.user.name,
+        email: session.user.email,
+        image: session.user.image,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      })
+      .then((doc) => {
+        if (imgToPost) {
+          const uploadTask = storage
+            .ref(`posts/${doc.id}`)
+            .putString(imgToPost, "data_url");
+
+          removeImage();
+
+          uploadTask.on(
+            "state_change",
+            null,
+            (err) => console.error(err),
+            () => {
+              //when upload completes
+              storage
+                .ref("posts")
+                .child(doc.id)
+                .getDownloadURL()
+                .then((url) => {
+                  db.collection("posts").doc(doc.id).set(
+                    {
+                      postImage: url,
+                    },
+                    { merge: true }
+                  );
+                });
+            }
+          );
+        }
+      });
 
     setMsg("");
     // inputRef.current.value = "";
