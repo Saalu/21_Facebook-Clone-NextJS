@@ -2,9 +2,9 @@ import StoryCard from "./StoryCard";
 
 const data = [
   {
-    name: "John Bow",
-    src: "https://links.papareact.com/k2j",
-    profile: "https://links.papareact.com/f0p",
+    name: "Elon Musk",
+    src: "https://links.papareact.com/kxk",
+    profile: "https://links.papareact.com/kxk",
   },
   {
     name: "Jeff Bezoz",
@@ -18,7 +18,7 @@ const data = [
   },
   {
     name: "Bill Gates",
-    src: "https://links.papareact.com/424",
+    src: "https://links.papareact.com/zvy",
     profile: "https://links.papareact.com/zvy",
   },
 ];
